@@ -1,0 +1,25 @@
+{
+	"A basic DsharpPlus Command": {
+		"prefix": "command",
+		"body": [
+			"[Command(\"COMMAND_NAME\")]",
+			"[Description(\"COMMAND_DESCRIPTION\")]",
+			"public async Task COMMAND(CommandContext ctx)",
+			"{",
+			"    ",
+			"}"
+		],
+		"description": "Creates a basic dsharpplus command"
+	},
+	"A basic DsharpPlus Embed": {
+		"prefix": "embed",
+		"body": [
+			"DiscordEmbedBuilder embed = new DiscordEmbedBuilder();",
+			"embed.Title = \"Your title\";",
+			"embed.Description = \"Your description\";",
+			"embed.Color = DiscordColor.Red;",
+			"embed.AddField(\"name\", \"value\", true);",
+			"await ctx.RespondAsync(embed: embed);"
+		]
+	},
+}
