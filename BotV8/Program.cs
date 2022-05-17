@@ -1,11 +1,11 @@
-﻿global using Newtonsoft.Json;
+﻿global using BotV8;
+global using DSharpPlus;
+global using DSharpPlus.Entities;
+global using DSharpPlus.CommandsNext;
+global using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
-using BotV8;
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.Entities;
 
 namespace V8_Bot
 {
@@ -41,7 +41,7 @@ namespace V8_Bot
 
             var commands = discord.UseCommandsNext(new CommandsNextConfiguration()
             {
-                StringPrefixes = new[] { configJson.Prefix},
+                StringPrefixes = new[] { configJson.Prefix },
             });
 
             await discord.ConnectAsync();
