@@ -1,0 +1,71 @@
+@page "/Roles"
+
+<MudTabs>
+    <MudTabPanel Text="Roles">
+        <MudDataGrid T="User" Items="@Users" ReadOnly="@_readOnly"
+            EditMode="@(_isCellEditMode ? DataGridEditMode.Cell : DataGridEditMode.Form)"
+            StartedEditingItem="@StartedEditingItem" CancelledEditingItem="@CancelledEditingItem"
+            CommittedItemChanges="@CommittedItemChanges" Bordered="true" Dense="true"
+            EditTrigger="@(_editTriggerRowClick ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+            <Colunms>
+                <Column T="User" Field="Discriminator" Title="Discriminator" IsEditable="false" />
+                <Column T="User" Field="Username" IsEditable="false" />
+                <Column T="User" Field="Roles">
+                    <EditTemplate>
+                        <MudSelect @bind-Value="context.Item.Roles" Required
+                            RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
+                            <MudSelectItem Value="0">Owner</MudSelectItem>
+                            <MudSelectItem Value="1">Coconut</MudSelectItem>
+                            <MudSelectItem Value="2">Nigglet</MudSelectItem>
+                        </MudSelect>
+                    </EditTemplate>
+                </Column>
+                <Column T="User" Field="Level" />
+            </Colunms>
+        </MudDataGrid>
+    </MudTabPanel>
+</MudTabs>
+
+@code {
+    private class User
+    {
+        public int? Discriminator { get; set; }
+        public string? Username { get; set; }
+        public string[]? Roles { get; set; }
+        public int? Level { get; set; }
+    }
+
+    private IEnumerable<User> Users = new List<User>();
+    private bool _readOnly;
+    private bool _isCellEditMode;
+    private List<string> _events = new();
+    private bool _editTriggerRowClick;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Users = new User[]{
+new User(){ Discriminator = 2906, Username="dj_bluee24", Roles = new string[] {"Owner", "Developer", "Admin"} , Level =
+100 },
+new User(){ Discriminator = 2906, Username="Jarasonic", Roles = new string[] {"Olaitan", "Developer", "Admin"} , Level =
+100 },
+new User(){ Discriminator = 2906, Username="Maid-Kun", Roles = new string[] {"Yahaya", "Admin"} , Level = 100 },
+new User(){ Discriminator = 2906, Username="Nemz", Roles = new string[] {"Anslem", "Admin"} , Level = 100 },
+};
+    }
+
+    // events
+    void StartedEditingItem(User item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CancelledEditingItem(User item)
+    {
+        _events.Insert(0, $"Event = CancelledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CommittedItemChanges(User item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+}

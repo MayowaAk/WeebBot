@@ -1,0 +1,72 @@
+@page "/Moderation"
+
+<MudTabs Elevation="2" Rounded="false" Centered="false">
+    <MudTabPanel Text="Banned Users" Icon="@Icons.Filled.NoAccounts">
+        <MudTable Items="@Users" Dense="true" Hover="true" Bordered="true" Striped="true"
+            Filter="new Func<User,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Server Members</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start"
+                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Discriminator</MudTh>
+                <MudTh>Username</MudTh>
+                <MudTh>Roles</MudTh>
+                <MudTh>Level</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Discriminator">@context.Discriminator</MudTd>
+                <MudTd DataLabel="Username">@context.Username</MudTd>
+                <MudTd DataLabel="Roles">@context.Roles</MudTd>
+                <MudTd DataLabel="Level">@context.Level</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudTabPanel>
+    <MudTabPanel Text="Kicked Users" Icon="@Icons.Material.Filled.Api" />
+    <MudTabPanel Text="Audit Log" Icon="@Icons.Material.Filled.Api" />
+</MudTabs>
+
+@code {
+    private class User
+    {
+        public int? Discriminator { get; set; }
+        public string? Username { get; set; }
+        public string[]? Roles { get; set; }
+        public int? Level { get; set; }
+    }
+
+    private User selectedItem1 = null;
+    private string searchString1 = "";
+    private HashSet<User> selectedItems = new HashSet<User>();
+
+    private IEnumerable<User> Users = new List<User>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Users = new User[]{
+new User(){ Discriminator = 2906, Username="dj_bluee24", Roles = new string[] {"Owner", "Developer", "Admin"} , Level =
+100 },
+new User(){ Discriminator = 2906, Username="Jarasonic", Roles = new string[] {"Olaitan", "Developer", "Admin"} , Level =
+100 },
+new User(){ Discriminator = 2906, Username="Maid-Kun", Roles = new string[] {"Yahaya", "Admin"} , Level = 100 },
+new User(){ Discriminator = 2906, Username="Nemz", Roles = new string[] {"Anslem", "Admin"} , Level = 100 },
+};
+    }
+
+    private bool FilterFunc1(User user) => FilterFunc(user, searchString1);
+
+    private bool FilterFunc(User user, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (user.Discriminator.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (user.Username.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{user.Level}".Contains(searchString))
+            return true;
+        return false;
+    }
+}

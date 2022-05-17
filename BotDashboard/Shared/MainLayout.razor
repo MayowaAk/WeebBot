@@ -1,0 +1,70 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider DefaultScrollbar="true" @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="0">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
+            OnClick="@((e) => DrawerToggle())" />
+        <MudSpacer />
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Filled.DarkMode"
+            ToggledIcon="@Icons.Filled.LightMode" />
+        <MudIconButton Icon="@Icons.Filled.AccountCircle" Color="Color.Inherit" Link="https://www.google.com" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h6">WeebBotDashboard</MudText>
+        </MudDrawerHeader>
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+
+
+
+    bool _drawerOpen = true;
+
+
+
+    private bool _isDarkMode;
+
+
+
+
+
+    void DrawerToggle()
+
+    {
+
+        _drawerOpen = !_drawerOpen;
+
+    }
+
+
+
+    private MudThemeProvider _mudThemeProvider;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+    {
+
+        if (firstRender)
+
+        {
+
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+
+            StateHasChanged();
+
+        }
+
+    }
+}
